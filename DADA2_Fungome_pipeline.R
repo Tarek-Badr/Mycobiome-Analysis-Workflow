@@ -140,7 +140,8 @@ write.csv(sample.names, file = "sample.names.csv")
 ################################
 #Assign taxonomy with unite
 ################################
-
+#download database: https://unite.ut.ee/repository.php
+#ref: https://plutof.ut.ee/#/doi/10.15156/BIO/1281567
 
 unite.ref = "C:/Users/ngs-adm/Desktop/Fungome/sh_general_release_10.05.2021/sh_general_release_dynamic_10.05.2021.fasta"
 
@@ -153,7 +154,6 @@ head(taxa.print)
 
 
 ##################################
-#Extracting the standard goods from DADA2
 #The typical standard outputs from amplicon processing are a fasta file, a count table, and a taxonomy table. So here's one way we can generate those files from your DADA2 objects in R:
 # giving our seq headers more manageable names (ASV_1, ASV_2...)
 
@@ -186,23 +186,10 @@ asv_tax_unite <- taxa_unite
 row.names(asv_tax_unite) <- sub(">", "", asv_headers)
 write.table(asv_tax_unite, "asv_tax_unite.tsv", sep="\t", quote=F, col.names=NA)
 
-
-
 ######################### 
-
 
 fungi_count_table = asv_tab_fungi
 fungi_taxa_table = asv_tax_unite
-
-
-OP_count_tab = fungi_count_table[,c(1:27)]
-
-write.table(OP_count_tab, "OP_count_fungi.tsv", sep="\t", quote=F, col.names=NA)
-
-OP_taxa_tab = fungi_taxa_table
-
-OP_sampleinf_tab <- read.table("Sample_Info_OP.txt", header=T, row.names=1,
-                        check.names=F, sep="\t")
 
 #######################################################
 
@@ -242,7 +229,6 @@ deseq_counts_filtered #rownames/ASVs (369)
 ############################
 # making our phyloseq object with transformed table
 
-
 physeq <- phyloseq(otu_table(count_tab, taxa_are_rows=T), 
                sample_data(sample_info_tab), 
                tax_table(tax_tab))
@@ -257,6 +243,7 @@ ps <- subset_taxa(physeq, !is.na(Phylum) & !Phylum %in% c("", "uncharacterized")
 prevdf = apply(X = otu_table(ps),
                MARGIN = ifelse(taxa_are_rows(ps), yes = 1, no = 2),
                FUN = function(x){sum(x > 0)})
+
 # Add taxonomy and total read counts to this data.frame
 prevdf = data.frame(Prevalence = prevdf,
                     TotalAbundance = taxa_sums(ps),
@@ -302,6 +289,7 @@ plot_abundance(psOrd, Facet = "Genus", Color = NULL)
 #######################################
 #Beta diversity:  PCoA and PERMANOVA/ADONIS'
 # generating and visualizing the PCoA with phyloseq
+
 vst_pcoa <- ordinate(physeq, method="MDS", distance="euclidean")
 vst_pcoa <- ordinate(physeq, method="NMDS", distance="bray")
 
