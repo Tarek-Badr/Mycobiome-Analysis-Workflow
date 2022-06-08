@@ -1,5 +1,5 @@
 
-#!/usr/bin/bash
+#!/bin/bash
 
 source ~/anaconda3/etc/profile.d/conda.sh
 
