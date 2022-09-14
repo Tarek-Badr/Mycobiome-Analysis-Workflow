@@ -1,0 +1,20 @@
+#LEfSe package source: https://github.com/SegataLab/lefse
+
+
+# Installation with Conda: 
+
+$ conda install -c bioconda lefse
+
+$ conda create --name lefse # Create conda environment
+
+$ conda activate lefse
+
+###
+
+$ lefse_format_input.py lsfe_fungigenus_Koe.txt lsfe_fungigenus_Koe.in -c 1 -u 2 -o 1000000 # lefse-format_input.py convert the input data matrix to the format for LEfSe.
+
+$ lefse_run.py lsfe_fungigenus_Koe.in lsfe_fungigenus_Koe.res -a 1.0 -w 1.0 -l 0.0 --wilc 1 -r lda -e 1 --min_c 1 -y 0 # lefse_run.py performs the actual statistica analysis
+
+$ lefse_plot_res.py lsfe_fungigenus_Koe.res lsfe_fungigenus_Koe.png --dpi 600 # lefse_plot_res.py visualizes the output
+
+$ lefse_plot_cladogram.py lsfe_fungigenus_Koe.res lsfe_fungigenus_Koe.cladogram.png --format png # lefse_plot_cladogram.py visualizes the output on a hierarchical tree
