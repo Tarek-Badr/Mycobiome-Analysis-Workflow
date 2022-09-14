@@ -433,13 +433,25 @@ ps.top20 <- prune_taxa(top20, ps.top20)
 
 ###
 
-
-
+                                    
 
 tops <- names(sort(taxa_sums(ps_unite), decreasing=TRUE))  # adjust number to wished top ones
-ps.top <- transform_sample_counts(ps_unite, function(OTU) OTU/sum(OTU))
+ps.top <- transform_sample_counts(ps_unite, function(OTU) OTU/sum(OTU)) #1st transformtion
+ps.top1 <- merge_samples(ps.top, "OP_Status")  # Merging                              
+ps.top2 <- transform_sample_counts(ps.top1, function(OTU) OTU/sum(OTU) #2nd transformation                                      
 ps.top <- prune_taxa(tops, ps.top)
 ####
+                                   
+                                   
+#Relative Abundances Genera
+plot_bar(ps.top2, y =  "Abundance", title = "Abundance based on Genus", fill="Genus", facet_grid=~OP_Status) 
+
+#Absolute Abundances Genera
+ps.topAb <- transform_sample_counts(ps_unite,function(OTU) OTU/1)
+
+plot_bar(ps.topAb, y =  "Abundance", title = "Absolute abundance based on Genus", fill="Genus")
+
+
 
 
 #plot_bar(ps.top20, x="Day", fill="family") + facet_wrap(~When, scales="free_x")  #Family in SILVA, family in Decipher
